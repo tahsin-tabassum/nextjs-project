@@ -38,7 +38,7 @@ const Library = async () => {
       id="library"
       className="bg-[#0B0D0F] px-6 py-20"
     >
-<div className="mx-auto max-w-[1100px]">
+<div className="mx-auto max-w-275">
   {/* heading */}
   <div className="mb-10">
 <h2 className="text-4xl font-black uppercase tracking-tight text-white">
@@ -56,7 +56,7 @@ const Library = async () => {
               href={`/workout/${workout.id}`}
               className="group overflow-hidden rounded-xl border border-[#292D33] bg-[#15181C] transition hover:-translate-y-1 hover:border-[#CCFF00]"
             >
-              <div className="flex h-[190px] items-center justify-center bg-[#1B1F23]">
+              <div className="flex h-47.5 items-center justify-center bg-[#1B1F23]">
 
              
               <img src={workout.image}  alt={workout.name} className="h-full w-full object-contain p-6 transition duration-300 group-hover:scale-105" /> 
