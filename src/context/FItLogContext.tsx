@@ -1,5 +1,9 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { workAsyncStorage } from "next/dist/server/app-render/work-async-storage.external";
+import { createContext, useContext, useMemo, useSyncExternalStore } from "react";
+import { getHeapSnapshot } from "v8";
+
+
 export type Workout={
     id: number;
   name: string;
@@ -19,15 +23,76 @@ sets: number;
 type FitLogContextType = {
   plan: Workout[];
   saved:Workout[];
-  hydrated: boolean;
   addToPlan:  (workout: Workout) => boolean;
   removeFromPlan: (id: number) => void;
-
   saveWorkout: (workout: Workout) => boolean;
   removeFromSaved: (id: number) => void;
 };
 
+type StorageStore={
+  getSnapshot: ()=> string;
+  getServerSnapshot: ()=> string;
+  subscribe: (listener: ()=> void)=> ()=>void;
+  set: (value: string) => void;
+};
+
+// local storage 
+
+function createStorageStore (key: string): StorageStore{
+  let value = "[]";
+
+
+  if(typeof window !== "undefined"){
+    value = localStorage.getItem(key)?? "[]";
+  }
+
+
+const listeners = new Set<() => void>();
+const subscribe = (listener: ()=> void)=> {
+listeners.add(listener);
+return () => {
+  listeners.delete(listener);
+};
+};
+const getSnapshot =() => value;
+
+
+const getServerSnapshot= () => "[]";
+
+const set =(newValue: string) =>{
+  value = newValue;
+if(typeof window!=="undefined"){
+  localStorage.setItem(key, newValue);
+}
+listeners.forEach((listener) => listener());
+};
+
+//
+if(typeof window !== "undefined"){
+  window.addEventListener("storage", (event)=> {
+    if(event.key === key){
+      value = event.newValue ?? "[]";
+      listeners.forEach((listener) => listener());
+    }
+  }
+);
+}
+  return {
+    getSnapshot,
+    getServerSnapshot,
+    subscribe,
+    set,
+  };
+}
+//
+const planStore = createStorageStore("fitlog-plan");
+const savedStore = createStorageStore("fitlog-saved");
+
+
+
 const FitLogContext = createContext<FitLogContextType | null >(null);
+
+
 
 export function FitLogProvider ({
   children, 
@@ -35,96 +100,121 @@ export function FitLogProvider ({
   children: React.ReactNode ;
 
 }) {
-  const [plan, setPlan] = useState < Workout []> ([]);
-  const [saved, setSaved] = useState < Workout []> ([]);
-  const [hydrated, setHydrated] = useState(false);
-
-  // data loading 
-
-  useEffect (()=>{
-    const storedPlan = localStorage.getItem("fitlog-plan");
-    const storedSaved = localStorage.getItem("fitlog-saved");
-
- if (storedPlan) {
-      setPlan(JSON.parse(storedPlan));
+  const planJson = useSyncExternalStore(
+    planStore.subscribe,
+    planStore.getSnapshot,
+    planStore.getServerSnapshot
+  );
+   const savedJson = useSyncExternalStore(
+    savedStore.subscribe,
+    savedStore.getSnapshot,
+    savedStore.getServerSnapshot
+  );
+  const plan = useMemo < Workout []>(()=>{
+    try{
+      return JSON.parse(planJson);
+    } catch {
+      return[];
     }
-if(storedSaved){
-  setSaved(JSON.parse(storedSaved));
-}
-setHydrated(true);
-  },[]);
+  },[planJson]);
 
-// saved today's plan
-useEffect (() => {
-  if (!hydrated) return;
-  localStorage.setItem("fitlog-plan", JSON.stringify(plan));
-}, [plan, hydrated]);
+const saved = useMemo < Workout []>(()=>{
+    try{
+      return JSON.parse(savedJson);
+    } catch {
+      return[];
+    }
+  },[savedJson]);
 
-// saved saved workouts
- useEffect(() => {
-    if (!hydrated) return;
+    // Add to Today's Plan
 
-    localStorage.setItem("fitlog-saved", JSON.stringify(saved));
-  }, [saved, hydrated]);
+const addToPlan = (workout:Workout)=>{
+  const currentPlan: Workout[] = JSON.parse(
+    planStore.getSnapshot()
+  );
 
-    // Add workout to Today's Plan
-    const addToPlan = (workout: Workout)=> {
-      if(plan.some((item)=> item.id=== workout.id)){
-        return false;
-      }
-      if(plan.length>= 5){
-        return false;
-      }
-       setPlan((current) => [...current, workout]);
-
-    return true;
-    };
-
-
-
-
-
- // Remove workout to Today's Plan
-
-const removeFromPlan= (id: number) => {
-  setPlan ((current) => 
-  current.filter((item) => item.id !== id));
-};
-
-// save workout
-const saveWorkout = (workout: Workout)=> {
-  if(saved.some((item) => item.id === workout.id)){
+  if(
+    currentPlan.some(
+      (item) => item.id === workout.id
+    )
+  ){
     return false;
   }
-  setSaved((current)=> [...current, workout]);
-  return true;
+
+if(currentPlan.length >=5){
+  return false;
+}
+const updatedPlan = [
+  ...currentPlan, 
+  workout,
+];
+planStore.set(JSON.stringify(updatedPlan));
+return true;
 };
 
-// remove from saved
+//  Remove from Today's Plan
 
-const removeFromSaved= (id: number) => {
-  setSaved((current) =>
-  current.filter((item) => item.id !==id));
+const removeFromPlan = (id: number) => {
+  const currentPlan: Workout[] = JSON.parse(
+    planStore.getSnapshot()
+  );
+
+const updatedPlan = currentPlan.filter(
+  (workout) => workout.id !== id
+);
+planStore.set(JSON.stringify(updatedPlan));
+
 };
 
-return(
-  <FitLogContext.Provider 
+  // Save for Later
+
+const saveWorkout = (workout: Workout) => {
+  const currentSaved: Workout[] = JSON.parse (savedStore.getSnapshot());
+
+ if (
+      currentSaved.some(
+        (item) => item.id === workout.id
+      )
+    ) {
+      return false;
+    }
+
+    const updatedSaved = [
+      ...currentSaved,
+      workout,
+    ];
+
+savedStore.set(JSON.stringify(updatedSaved));
+return true;
+};
+
+  // Remove from Saved
+
+const removeFromSaved = (id: number) => {
+  const currentSaved: Workout[] = JSON.parse(
+    savedStore.getSnapshot()
+  );
+
+  const updatedSaved = currentSaved.filter (
+    (workout) => workout.id !== id
+  );
+  savedStore.set (JSON.stringify(updatedSaved));
+};
+
+return (<FitLogContext.Provider
   value={{
     plan,
-       saved,
-        hydrated,
+        saved,
         addToPlan,
         removeFromPlan,
         saveWorkout,
         removeFromSaved,
-  }} >
-    {children}
-  </FitLogContext.Provider>
+  }} >{children}</FitLogContext.Provider>
 );
+
 }
 
-export function useFitlog()
-{
+export function useFitlog() {
   const context = useContext(FitLogContext);
 
   if(!context){
@@ -134,3 +224,6 @@ export function useFitlog()
   }
   return context;
 }
+
+
+  

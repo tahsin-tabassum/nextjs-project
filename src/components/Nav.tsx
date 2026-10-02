@@ -1,8 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import logo from "../assets/logo.png";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useFitlog } from "@/context/FItLogContext";
 
 const Nav = () => {
+
+const pathname = usePathname();
+const {plan, saved} = useFitlog();
+
+const isPlanPage = pathname === "/my-plan";
+const isWorkoutPage = pathname === "/" || pathname.startsWith ("/workout/");
+
     return (
         <nav className="sticky top-0 z-50 h-16 border-b border-[#202328] bg-[#0B0D0F]">
            
