@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useFitlog } from "@/context/FItLogContext";
+import Image from "next/image";
 
 
 type Tab = "plan" | "saved";
@@ -167,7 +168,7 @@ onChange={(e) =>
 </div>
 
 {sortedWorkouts.length===0?(
-    <div className="mt-5 flex min-h-[238px] flex-col items-center justify-center rounded-xl border border-dashed border-[#24282E] bg-[#0D1014] text-center">
+    <div className="mt-5 flex min-h-59.5 flex-col items-center justify-center rounded-xl border border-dashed border-[#24282E] bg-[#0D1014] text-center">
 <h2 className="text-[16px] font-black uppercase">NOTHING HERE YET</h2>
 
 <p className="mt-2 text-[10px] text-[#858B95]">
@@ -187,7 +188,7 @@ onChange={(e) =>
     <div
     key={workout.id} className="flex min-h-23 items-center gap-4 rounded-xl border border-[#24282E] bg-[#14171D] px-3 py-3">
 <div className="h-17 w-29 shrink-0 overflow-hidden rounded-lg bg-[#20242A]">
-<img src={workout.image}
+<Image src={workout.image}
  alt={workout.name}
  className="h-full w-full object-cover" />
 </div>

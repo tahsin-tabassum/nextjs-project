@@ -2,8 +2,8 @@ import Image from "next/image";
 import logo from "../assets/logo.png";
 const Footer =() =>{
     return(
-        <footer className="border-t border-[#1D2025] bg-[#0B0D0F]">
-<div className="mx-auto flex min-h-[64px]  max-w-[1100px] items-center justify-between px-6">
+        <footer className="border-t border-[#1D2025] bg-[#171616]">
+<div className="flex min-h-25   items-center justify-between px-6">
 
 {/* {logo} */}
 <div className="flex items-center gap-2">
@@ -13,7 +13,7 @@ const Footer =() =>{
           </span>
 
 </div>
-<p className="text-[10px] text-[#777D86]"> © 2026 FitLog — Workout Library. Train hard, log honest.</p>
+<p className="text-sm text-[#777D86]"> © 2026 FitLog — Workout Library. Train hard, log honest.</p>
 </div>
         </footer>
     );
