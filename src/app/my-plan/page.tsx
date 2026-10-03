@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import Nav from '@/components/Nav';
 import { useFitlog } from "@/context/FItLogContext";
 
 
@@ -90,7 +89,6 @@ const handleRemove = (id: number)=> {
 
 return (
     <main className="min-h-screen bg-[#0B0D0F] text-white">
-<Nav/>
 {/* toast */}
 {toast && (
     <div className="fixed right-6 top-20 z-50 rounded-md bg-[#CCFF00] px-5 py-3 text-xs font-bold text-black shadow-lg">
@@ -132,7 +130,7 @@ highlight
 <button 
 onClick={()=> setActiveTab("plan")}
 className={`rounded-md px-4 py-2 text-[10px] font-medium transition ${
-    activeTab === "plan" ? "bg-[#20252D] text-white shadow-sm" : "text-[#70757E] hover:text-white"
+    activeTab === "plan" ? "bg-[#20252D] text-[#CCFF00] shadow-sm" : "text-[#70757E] hover:text-white"
 }`}
 
 >
@@ -142,7 +140,7 @@ Today&apos;s Plan
 <button 
 onClick={()=> setActiveTab("saved")}
 className={`rounded-md px-4 py-2 text-[10px] font-medium transition ${
-    activeTab === "saved" ? "bg-[#20252D] text-white shadow-sm" : "text-[#70757E] hover:text-white"
+    activeTab === "saved" ? "bg-[#20252D] text-[#CCFF00] shadow-sm" : "text-[#70757E] hover:text-white"
 }`}>
 Saved
 </button>
