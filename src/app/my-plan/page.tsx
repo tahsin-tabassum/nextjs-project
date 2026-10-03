@@ -98,18 +98,18 @@ return (
 )
 }
 {/* main */}
-<section className="mx-auto min-h-[calc(100vh-145px)] max-w-235 px-6 py-9">
+<section className="mx-auto max-w-235 px-6 py-9">
     <div>
         <h1 className="text-[28px] font-black uppercase leading-none tracking-tight">
             MY PLAN
         </h1 >
-        <p className="mt-2 text-[12px] text-[#858B95]">
+        <p className="mt-2 text-sm text-[#858B95]">
     Cap of five lifts for today. Finish them,
             then load more.
         </p>
     </div>
 
-<div className="mt-5 grid grid-cols-3 overflow-hidden rounded-xl border border-[#24282E] bg-[#12151A]">
+<div className=" mt-5 grid grid-cols-3 overflow-hidden rounded-xl border border-[#24282E] bg-[#12151A]">
 <Metric
 label = "Exercised"
 value = {plan.length}
@@ -130,7 +130,7 @@ highlight
 <div className="flex rounded-xl border border-[#24282E] bg-[#111419] p-1">
 <button 
 onClick={()=> setActiveTab("plan")}
-className={`rounded-md px-4 py-2 text-[10px] font-medium transition ${
+className={`rounded-md px-4 py-2 text-[13px] font-medium transition ${
     activeTab === "plan" ? "bg-[#20252D] text-[#CCFF00] shadow-sm" : "text-[#70757E] hover:text-white"
 }`}
 
@@ -140,7 +140,7 @@ Today&apos;s Plan
 
 <button 
 onClick={()=> setActiveTab("saved")}
-className={`rounded-md px-4 py-2 text-[10px] font-medium transition ${
+className={`rounded-md px-4 py-2 text-[13px] font-medium transition ${
     activeTab === "saved" ? "bg-[#20252D] text-[#CCFF00] shadow-sm" : "text-[#70757E] hover:text-white"
 }`}>
 Saved
@@ -150,7 +150,7 @@ Saved
 </div>
 
 <div className="flex items-center gap-2">
-    <span className="text-[10px] text-[#858B95]">
+    <span className="text-[13px] text-[#858B95]">
 Sort By
     </span>
 
@@ -159,7 +159,7 @@ onChange={(e) =>
     setSortBy(
         e.target.value as SortOption
     )
-}  className="rounded-lg border border-[#24282E] bg-[#111419] px-3 py-2 text-[10px] text-white outline-none">
+}  className="rounded-lg border border-[#24282E] bg-[#111419] px-3 py-2 text-[13px] text-white outline-none">
 
 <option value="duration">Duration</option>
 <option value="calories">Calories</option>
@@ -169,15 +169,15 @@ onChange={(e) =>
 
 {sortedWorkouts.length===0?(
     <div className="mt-5 flex min-h-59.5 flex-col items-center justify-center rounded-xl border border-dashed border-[#24282E] bg-[#0D1014] text-center">
-<h2 className="text-[16px] font-black uppercase">NOTHING HERE YET</h2>
+<h2 className="text-md font-black uppercase">NOTHING HERE YET</h2>
 
-<p className="mt-2 text-[10px] text-[#858B95]">
+<p className="mt-2 text-sm text-[#858B95]">
      Browse the library and add a lift to get
               today moving.
 </p>
 <Link
               href="/"
-              className="mt-5 rounded-full bg-[#CCFF00] px-5 py-2.5 text-[10px] font-bold text-black transition hover:bg-[#b8e600]"
+              className="mt-5 rounded-full bg-[#CCFF00] px-5 py-2.5 text-sm font-bold text-black transition hover:bg-[#b8e600]"
             >
               Go to workouts
             </Link>

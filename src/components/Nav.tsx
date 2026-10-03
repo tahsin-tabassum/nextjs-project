@@ -12,9 +12,6 @@ const pathname = usePathname();
 
 const {plan, saved} = useFitlog();
 
-// const isPlanPage = pathname === "/my-plan";
-// const isWorkoutPage = pathname === "/" || pathname.startsWith ("/workout/");
-
     return (
         <nav className="sticky top-0 z-50 h-16 border-b border-[#202328] bg-[#0B0D0F]">
            
@@ -46,7 +43,7 @@ const {plan, saved} = useFitlog();
             </div>
 
 
-            <div className="flex items-center gap-6 text-xs">
+            <div className="flex items-center gap-6 text-sm">
                  <Link
             href="/my-plan"
             className="flex items-center gap-2 text-[#B5BAC3]"

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 type Workout ={
   id: number;
   name: string;
@@ -44,7 +45,7 @@ const Library = async () => {
 <h2 className="text-4xl font-black uppercase tracking-tight text-white">
   THE LIBRARY
 </h2>
-<p className="mt-2 text-sm text-[#858B95]">
+<p className="mt-2 text-md text-[#858B95]">
   Twelve lifts covering every major muscle group.
 </p>
   </div>
@@ -56,25 +57,26 @@ const Library = async () => {
               href={`/workout/${workout.id}`}
               className="group overflow-hidden rounded-xl border border-[#292D33] bg-[#15181C] transition hover:-translate-y-1 hover:border-[#CCFF00]"
             >
-              <div className="flex h-47.5 items-center justify-center bg-[#1B1F23]">
+              <div className="flex h-80 items-center justify-center bg-[#1B1F23]">
 
              
-              <img src={workout.image}  alt={workout.name} className="h-full w-full object-contain p-6 transition duration-300 group-hover:scale-105" /> 
+              <Image src={workout.image}  alt={workout.name} width={400} height={400}
+   className=" h-full w-full object-cover transition duration-300 group-hover:scale-105" /> 
               </div>
               {/* content */}
               <div className="p-5">
                 <div className="mb-3 flex flex-wrap gap-2">
  {workout.muscleGroups.map((group) => (
   <span key={group}
-  className="rounded-full border border-[#3A3F46]px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide text-[#CCFF00]"
+  className="rounded-full border border-[#3A3F46] px-2 py-1 text-[10px] font-bold uppercase tracking-wide bg-[#CCFF00]"
   >
 {group}
   </span>
   ))} </div>
-  <h3 className="text-lg font-black uppercase text-white">
+  <h3 className="text-md font-black uppercase text-white">
     {workout.name}
   </h3>
-  <p className="mt-2 text-xs text-[#858B95]">
+  <p className="mt-2 text-sm text-[#858B95]">
     {workout.equipment}
   </p>
   <div className="mt-5 flex items-center gap-4 border-t border-[#292D33] pt-4 text-xs text-[#A2A7AF]">

@@ -3,6 +3,9 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import {useEffect, useState} from "react";
 import { useFitlog, Workout } from "@/context/FItLogContext";
+import Image from "next/image";
+import { CalendarPlus } from "lucide-react";
+
 
 export default function WorkoutDetails(){
     const params = useParams();
@@ -12,8 +15,7 @@ export default function WorkoutDetails(){
 const {
     addToPlan,
     saveWorkout, 
-    plan, 
-    saved,
+    plan,
 } = useFitlog();
 
 const [workout, setWorkout] = useState <Workout | null>(null);
@@ -77,7 +79,7 @@ const handleSave =() => {
 if(loading){
 return(
     <main className="min-h-screen bg-[#0B0D0F] px-6 py-20 text-white">
-<div className="mx-auto max-w-[1100px]">
+<div className="mx-auto max-w-275">
     <p className="text-sm text-[#858B95]">
           Loading workout...
     </p>
@@ -108,32 +110,28 @@ className="mt-6 inline-block rounded-md bg-[#CCFF00] px-5 py-3 text-sm font-bold
 
 return(
     <main className="min-h-screen bg-[#0B0D0F] px-6 py-16 text-white">
-<div className="mx-auto grid max-w-[1100px] grid-cols-1 gap-12 lg:grid-cols-2">
-<div className="flex min-h-[500px] items-center justify-center rounded-xl border border-[#292D33] bg-[#15181C] p-8">
-    <img src={workout.image} alt={workout.name} className="max-h-[500px] w-full object-contain" />
+<div className="mx-auto grid max-w-275 max-h-250  grid-cols-1 gap-12 lg:grid-cols-2">
+<div className="flex min-h-125 items-center justify-center rounded-5xl border border-[#292D33] bg-[#15181C] ">
+    <Image src={workout.image} alt={workout.name} width={500} height={500} className="h-full w-full object-cover rounded-5xl " />
 </div>
 
 <div>
     <div className="mb-4 flex flex-wrap gap-2">
 {workout.muscleGroups.map((group) => (
     <span key={group}
-                className="rounded-full border border-[#CCFF00] px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-[#CCFF00]">
+                className="rounded-full border bg-[#CCFF00] px-3 py-1 text-sm font-bold uppercase tracking-wide text-black">
 {group}
     </span>
 ))
 
 }  </div>
 
-<h1 className="text-4xl font-black uppercase leading-none md:text-5xl">{workout.name}</h1>
+<h1 className="text-3xl font-black uppercase leading-none md:text-5xl">{workout.name}</h1>
 
-<p className="mt-5 text-sm leading-6 text-[#858B95]"> {workout.description}</p>
+<p className="mt-4 text-sm leading-6 text-[#858B95]"> {workout.description}</p>
 
-<div className="mt-8 overflow-hidden rounded-xl border border-[#292D33]">
-    <div className="border-b border-[#292D33] px-5 py-4">
-<h2 className="text-xs font-black uppercase tracking-[0.15em] text-[#CCFF00]">
-                KEY SPECS
-              </h2>
-    </div>
+<div className="mt-8 overflow-hidden rounded-xl border bg-[#15151f]">
+   
 
 <div className="grid grid-cols-2">
 <Spec
@@ -196,9 +194,12 @@ value={`★ ${workout.rating}`}
 
 {/* button */}
 <div className="mt-8 flex flex-wrap gap-3">
-<button onClick={handleAddToPlan}
-className="rounded-md bg-[#CCFF00] px-5 py-3 text-xs font-black uppercase tracking-wide text-black transition hover:bg-[#b8e600]">
-＋ Add to today&apos;s plan
+<button
+  onClick={handleAddToPlan}
+  className="inline-flex items-center gap-2 rounded-md bg-[#CCFF00] px-5 py-3 text-xs font-black uppercase tracking-wide text-black transition hover:bg-[#b8e600]"
+>
+  <CalendarPlus size={16} strokeWidth={2.5} />
+  Add to today&apos;s plan
 </button>
 
 
